@@ -2,10 +2,13 @@
 //
 // What it does, end to end:
 //   1. read the sealed DefiLlama snapshot (a file, or a directory holding snapshot.json),
-//   2. score every pre-token protocol with the fitted line in lib/model.ts,
-//   3. write the ranked board and the dashboard's data.js to the output directory,
-//   4. copy this repo's dashboard/ and screenshots/ into the output,
-//   5. write dossier.json last, from the finished output, via the vendored
+//   2. score every boardable pre-token protocol with the fitted line in lib/model.ts,
+//   3. account for every other protocol in the snapshot too — live tokens, token-listed
+//      but unpriced ones, and the pre-token protocols set aside as products of a token
+//      that trades — so the dashboard accounts for all 758,
+//   4. write the ranked board and the dashboard's data.js to the output directory,
+//   5. copy this repo's dashboard/ and screenshots/ into the output,
+//   6. write dossier.json last, from the finished output, via the vendored
 //      make.fun library -- the scorer rebuilds that dossier and compares bytes,
 //      so nothing after this step may touch the output.
 //
@@ -133,6 +136,6 @@ writeFileSync(
 );
 
 process.stdout.write(
-  `token radar: ${snapshot.protocols.length} protocols, ${snapshot.watchlist.length} on the watchlist, ${board.length} rows scored (${radar.early_size} early, ${radar.live_size} live set aside)\n` +
+  `token radar: ${snapshot.protocols.length} protocols, ${snapshot.watchlist.length} on the watchlist, ${board.length} rows scored (${radar.live_size} live, ${radar.unpriced_size} token-listed unpriced, ${radar.excluded_size} set aside; ${radar.accounted_total} accounted)\n` +
     `token radar: wrote ${join(out, 'board.json')}, ${join(out, 'data.js')}, ${join(out, 'dashboard')} (3 files), ${join(out, 'screenshots')} (${shots.length} images) and ${join(out, 'dossier.json')}\n`,
 );
